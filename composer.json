@@ -1,0 +1,11 @@
+{
+    "name": "vrak/slim3",
+    "authors": [
+        {
+            "name": "ECR"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.8"
+    }
+}

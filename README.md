@@ -1,2 +1,2 @@
 # Ecr_api
-ECR api files repository
+Ecr api created with Slim 3 PHP framework
