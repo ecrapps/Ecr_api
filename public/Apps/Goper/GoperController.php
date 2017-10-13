@@ -310,7 +310,7 @@ class GoperController {
 		$getDailyTasks .= "D.idTrain as trainId, ";
 		$getDailyTasks .= "D.idUserChecked, ";
 		$getDailyTasks .= "D.dateChecked, ";
-		$getDailyTasks .= "CASE D.checked WHEN 1 THEN true ELSE false END AS checked, ";
+		$getDailyTasks .= "D.checked, ";
 		$getDailyTasks .= "DATE_FORMAT(D.deadline, '%d/%m/%Y - %H:%i') as deadline, ";
 		$getDailyTasks .= "D.dateUpdate, ";
 		$getDailyTasks .= "D.cancelled ";
@@ -357,6 +357,17 @@ class GoperController {
 		$updateTaskCheckResult = $this->container->db->query($updateTaskCheck, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($updateTaskCheckResult,JSON_NUMERIC_CHECK));
+	}
+
+	public function saveNewComment(Request $request, Response $response, $args){
+		$getParsedBody = $request->getParsedBody();
+		$datas = new stdClass();
+		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
+		$saveNewComment = "INSERT INTO goper_comments ";
+		$saveNewComment .= "VALUES (NULL, :idTask, :author, :content, NOW())";
+		$saveNewCommentResult = $this->container->db->query($saveNewComment, $datas);
+		return $response->withStatus(200)
+        				->write(json_encode($saveNewCommentResult,JSON_NUMERIC_CHECK));
 	}
 
 }

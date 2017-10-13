@@ -30,6 +30,8 @@
 		// Get Task type
 		$app->get('/getTaskTypes', '\GoperController:getTaskTypes');
 
+		$app->post('/saveNewComment', '\GoperController:saveNewComment');
+
 		//Get Daily Tasks 
 		$app->get('/getDailyTasks', '\GoperController:getDailyTasks');
 
