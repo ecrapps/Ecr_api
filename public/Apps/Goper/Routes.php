@@ -25,8 +25,13 @@
 		$app->post('/updateTask', '\GoperController:updateTask');
 		//Delete Task 
 		$app->post('/deleteTask', '\GoperController:deleteTask');
+		// Update checked/unchecked Task 
+		$app->post('/updateTaskCheck', '\GoperController:updateTaskCheck');
 		// Get Task type
 		$app->get('/getTaskTypes', '\GoperController:getTaskTypes');
+
+		//Get Daily Tasks 
+		$app->get('/getDailyTasks', '\GoperController:getDailyTasks');
 
 		$app->post('/associateClientTask', '\GoperController:associateClientTask');
 		$app->post('/deleteClientTask', '\GoperController:deleteClientTask');

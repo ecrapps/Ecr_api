@@ -298,4 +298,65 @@ class GoperController {
         				->write(json_encode($deleteMdTaskResult,JSON_NUMERIC_CHECK));
 	}
 
+	//////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////
+	//							Daily Tasks								//
+	//////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////
+	public function getDailyTasks(Request $request, Response $response, $args){
+		$getDailyTasks = "SELECT D.id, ";
+		$getDailyTasks .= "D.idTask, ";
+		$getDailyTasks .= "TK.name, ";
+		$getDailyTasks .= "D.idTrain as trainId, ";
+		$getDailyTasks .= "D.idUserChecked, ";
+		$getDailyTasks .= "D.dateChecked, ";
+		$getDailyTasks .= "CASE D.checked WHEN 1 THEN true ELSE false END AS checked, ";
+		$getDailyTasks .= "DATE_FORMAT(D.deadline, '%d/%m/%Y - %H:%i') as deadline, ";
+		$getDailyTasks .= "D.dateUpdate, ";
+		$getDailyTasks .= "D.cancelled ";
+		$getDailyTasks .= "FROM goper_dailytasks as D ";
+		$getDailyTasks .= "LEFT JOIN goper_tasks as TK ON D.idTask = TK.id ";
+		$getDailyTasks .= "LEFT JOIN goper_trains as TN ON D.idTrain = TN.id ";
+		$getDailyTasks .= "WHERE NOT (D.DEADLINE < NOW() AND checked = 1) ";
+		$getDailyTasks .= "AND cancelled <> 1 ";
+		$getDailyTasks .= "ORDER BY D.deadline ASC";
+		$getDailyTasksResult = $this->container->db->query($getDailyTasks);
+
+		for ($i=0 ; $i<sizeof($getDailyTasksResult) ; $i++) {
+			// Add comments to each element
+			$getTaskComments = "SELECT C.id, ";
+			$getTaskComments .= "C.idTask, ";
+			$getTaskComments .= "C.author as idAuthor, ";
+			$getTaskComments .= "U.name as author, ";
+			$getTaskComments .= "C.content, ";
+			$getTaskComments .= "C.date ";
+			$getTaskComments .= "FROM goper_comments as C ";
+			$getTaskComments .= "LEFT JOIN users as U ON C.author = U.id ";
+			$getTaskComments .= "WHERE C.idTask = '".$getDailyTasksResult[$i]['id']."' ";
+			$getTaskComments .= "ORDER BY C.date DESC";
+			$getTaskCommentsResult = $this->container->db->query($getTaskComments);
+
+			$getDailyTasksResult[$i]['comments'] = [];
+
+			if (sizeof($getTaskCommentsResult) > 0) {
+				$getDailyTasksResult[$i]['comments'] = $getTaskCommentsResult;
+			}
+		}
+
+		return $response->withStatus(200)
+        				->write(json_encode($getDailyTasksResult,JSON_NUMERIC_CHECK));
+	}
+
+	public function updateTaskCheck(Request $request, Response $response, $args){
+		$getParsedBody = $request->getParsedBody();
+		$datas = new stdClass();
+		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
+		$updateTaskCheck = "UPDATE goper_dailytasks ";
+		$updateTaskCheck .= "SET checked = :taskIsChecked ";
+		$updateTaskCheck .= "WHERE id = :taskId";
+		$updateTaskCheckResult = $this->container->db->query($updateTaskCheck, $datas);
+		return $response->withStatus(200)
+        				->write(json_encode($updateTaskCheckResult,JSON_NUMERIC_CHECK));
+	}
+
 }

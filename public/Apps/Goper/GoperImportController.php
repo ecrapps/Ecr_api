@@ -104,7 +104,7 @@ class GoperImportController {
 
 						// Insert task into db
 						$createCommonTaskIntoDailyTasks = "INSERT INTO goper_dailytasks ";
-						$createCommonTaskIntoDailyTasks .= "VALUES (NULL, '".$getCommonTaskDetailsResult[0]['id']."', '999-999', '', '', '', '0', '', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
+						$createCommonTaskIntoDailyTasks .= "VALUES (NULL, '".$getCommonTaskDetailsResult[0]['id']."', '999-999', '', '', '', '0', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
 							$createCommonTaskIntoDailyTasksResult = $this->container->db->query($createCommonTaskIntoDailyTasks);
 					}
 				}
@@ -139,7 +139,7 @@ class GoperImportController {
 
 							// Insert task into db
 							$createClientTaskIntoDailyTasks = "INSERT INTO goper_dailytasks ";
-							$createClientTaskIntoDailyTasks .= "VALUES (NULL, '".$getClientTaskDetailsResult[0]['id']."', '999-".$trigrammeClient."', '', '', '', '0', '', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
+							$createClientTaskIntoDailyTasks .= "VALUES (NULL, '".$getClientTaskDetailsResult[0]['id']."', '999-".$trigrammeClient."', '', '', '', '0', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
 							$createClientTaskIntoDailyTasksResult = $this->container->db->query($createClientTaskIntoDailyTasks);
 						}
 					}
@@ -175,7 +175,7 @@ class GoperImportController {
 
 								// Insert task into db
 								$createTrainTaskIntoDailyTasks = "INSERT INTO goper_dailytasks ";
-								$createTrainTaskIntoDailyTasks .= "VALUES (NULL, '".$getTrainTaskDetailsResult[0]['id']."', '".$lineTabTrainIds[$indexColTrainId]."', '', '', '', '0', '', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
+								$createTrainTaskIntoDailyTasks .= "VALUES (NULL, '".$getTrainTaskDetailsResult[0]['id']."', '".$lineTabTrainIds[$indexColTrainId]."', '', '', '', '0', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
 								$createTrainTaskIntoDailyTasksResult = $this->container->db->query($createTrainTaskIntoDailyTasks);
 							}
 
@@ -210,7 +210,7 @@ class GoperImportController {
 
 									// Insert task into db
 									$createTrainTaskIntoDailyTasks = "INSERT INTO goper_dailytasks ";
-									$createTrainTaskIntoDailyTasks .= "VALUES (NULL, '".$getTrainTaskDetailsResult[0]['id']."', '".$lineTabTrainIds[$indexColTrainId]."', '', '', '', '0', '', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
+									$createTrainTaskIntoDailyTasks .= "VALUES (NULL, '".$getTrainTaskDetailsResult[0]['id']."', '".$lineTabTrainIds[$indexColTrainId]."', '', '', '', '0', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
 									$createTrainTaskIntoDailyTasksResult = $this->container->db->query($createTrainTaskIntoDailyTasks);
 								}
 							}
@@ -263,7 +263,7 @@ class GoperImportController {
 
 								// Insert task into db
 								$createCancellationTaskIntoDailyTasks = "INSERT INTO goper_dailytasks ";
-								$createCancellationTaskIntoDailyTasks .= "VALUES (NULL, '".$getCancellationTaskDetailsResult[0]['id']."', '".$lineTabTrainIds[$indexColTrainId]."', '', '', '', '0', '', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
+								$createCancellationTaskIntoDailyTasks .= "VALUES (NULL, '".$getCancellationTaskDetailsResult[0]['id']."', '".$lineTabTrainIds[$indexColTrainId]."', '', '', '', '0', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
 								$createCancellationTaskIntoDailyTasksResult = $this->container->db->query($createCancellationTaskIntoDailyTasks);
 							}
 						}
@@ -274,19 +274,19 @@ class GoperImportController {
 			} else {
 				// Headers were not found -> error
 				echo "Format de fichier non valide : les headers ne sont pas trouvés.\n";
-				$responseImport = "Format de fichier non valide : les headers ne sont pas trouvés.\n";
+				/*$responseImport = "Format de fichier non valide : les headers ne sont pas trouvés.\n";
 				return $response->withStatus(415)
-        				    		->write(json_encode($responseImport,JSON_NUMERIC_CHECK));
+        				    		->write(json_encode($responseImport,JSON_NUMERIC_CHECK));*/
 			}
 		} else {
 			// Empty file -> error
 			echo "Format de fichier non valide : fichier vide.\n";
-			$responseImport = "Format de fichier non valide : fichier vide.\n";
+			/*$responseImport = "Format de fichier non valide : fichier vide.\n";
 			return $response->withStatus(415)
-      				    		->write(json_encode($responseImport,JSON_NUMERIC_CHECK));
+      				    		->write(json_encode($responseImport,JSON_NUMERIC_CHECK));*/
 		}
 
-		return $response->withStatus(200)
-        				    ->write(json_encode($responseImport,JSON_NUMERIC_CHECK));
+		/*return $response->withStatus(200)
+        				    ->write(json_encode($responseImport,JSON_NUMERIC_CHECK));*/
 	}
 }
