@@ -92,6 +92,52 @@ class GoperController {
         				->write(json_encode($getTasksResult,JSON_NUMERIC_CHECK));
 	}
 
+	public function getTask(Request $request, Response $response, $args){
+		$getQueryParams = $request->getQueryParams();
+		$datas = new stdClass();
+		$datas->params = json_decode(json_encode($getQueryParams), FALSE);
+		$getTask = "SELECT D.id, ";
+		$getTask .= "D.idTask, ";
+		$getTask .= "TK.name, ";
+		$getTask .= "D.idTrain as trainId, ";
+		$getTask .= "D.idUserChecked, ";
+		$getTask .= "D.dateChecked, ";
+		$getTask .= "D.checked, ";
+		$getTask .= "DATE_FORMAT(D.deadline, '%d/%m/%Y - %H:%i') as deadline, ";
+		$getTask .= "D.dateUpdate, ";
+		$getTask .= "D.cancelled ";
+		$getTask .= "FROM goper_dailytasks as D ";
+		$getTask .= "LEFT JOIN goper_tasks as TK ON D.idTask = TK.id ";
+		$getTask .= "LEFT JOIN goper_trains as TN ON D.idTrain = TN.id ";
+		$getTask .= "WHERE NOT (D.DEADLINE < NOW() AND checked = 1) ";
+		$getTask .= "AND D.cancelled <> 1 ";
+		$getTask .= "AND D.id = :idTask ";
+		$getTask .= "ORDER BY D.deadline ASC";
+		$getTaskResult = $this->container->db->query($getTask, $datas);
+
+		// Add comments to the element
+		$getTaskComments = "SELECT C.id, ";
+		$getTaskComments .= "C.idTask, ";
+		$getTaskComments .= "C.author as idAuthor, ";
+		$getTaskComments .= "U.name as author, ";
+		$getTaskComments .= "C.content, ";
+		$getTaskComments .= "C.date ";
+		$getTaskComments .= "FROM goper_comments as C ";
+		$getTaskComments .= "LEFT JOIN users as U ON C.author = U.id ";
+		$getTaskComments .= "WHERE C.idTask = '".$getTaskResult[0]['id']."' ";
+		$getTaskComments .= "ORDER BY C.date DESC";
+		$getTaskCommentsResult = $this->container->db->query($getTaskComments);
+
+		$getTaskResult[0]['comments'] = [];
+
+		if (sizeof($getTaskCommentsResult) > 0) {
+			$getTaskResult[0]['comments'] = $getTaskCommentsResult;
+		}
+
+		return $response->withStatus(200)
+        				->write(json_encode($getTaskResult,JSON_NUMERIC_CHECK));
+	}
+
 	public function createTask(Request $request, Response $response, $args){
 		$getParsedBody = $request->getParsedBody();
 		$datas = new stdClass();
@@ -318,7 +364,7 @@ class GoperController {
 		$getDailyTasks .= "LEFT JOIN goper_tasks as TK ON D.idTask = TK.id ";
 		$getDailyTasks .= "LEFT JOIN goper_trains as TN ON D.idTrain = TN.id ";
 		$getDailyTasks .= "WHERE NOT (D.DEADLINE < NOW() AND checked = 1) ";
-		$getDailyTasks .= "AND cancelled <> 1 ";
+		$getDailyTasks .= "AND D.cancelled <> 1 ";
 		$getDailyTasks .= "ORDER BY D.deadline ASC";
 		$getDailyTasksResult = $this->container->db->query($getDailyTasks);
 

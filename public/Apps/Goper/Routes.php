@@ -19,6 +19,8 @@
 
 		//Get Tasks 
 		$app->get('/getTasks', '\GoperController:getTasks');
+		//Get Task
+		$app->get('/getTask', '\GoperController:getTask');
 		//Create Task 
 		$app->post('/createTask', '\GoperController:createTask');
 		//Update Task 
