@@ -352,7 +352,7 @@ class GoperController {
 	public function getDailyTasks(Request $request, Response $response, $args){
 		$getDailyTasks = "SELECT D.id, ";
 		$getDailyTasks .= "D.idTask, ";
-		$getDailyTasks .= "TK.name, ";
+		$getDailyTasks .= "TK.name as taskname, ";
 		$getDailyTasks .= "D.idTrain as trainId, ";
 		$getDailyTasks .= "D.idUserChecked, ";
 		$getDailyTasks .= "D.dateChecked, ";
