@@ -84,7 +84,7 @@ class GoperImportController {
 				// Create common tasks (only once per day)
 				$checkIfCommonTasksAreCreated = "SELECT id ";
 				$checkIfCommonTasksAreCreated .= "FROM goper_dailytasks ";
-				$checkIfCommonTasksAreCreated .= "WHERE idTrain = '999-999' ";
+				$checkIfCommonTasksAreCreated .= "WHERE trainId = '999-999' ";
 				$checkIfCommonTasksAreCreated .= "AND DATE_FORMAT(dateUpdate, '%Y-%m-%d') = '" . date('Y-m-d') . "'";
 				$checkIfCommonTasksAreCreatedResult = $this->container->db->query($checkIfCommonTasksAreCreated);
 
@@ -104,16 +104,28 @@ class GoperImportController {
 
 						// Insert task into db
 						$createCommonTaskIntoDailyTasks = "INSERT INTO goper_dailytasks ";
-						$createCommonTaskIntoDailyTasks .= "VALUES (NULL, '".$getCommonTaskDetailsResult[0]['id']."', '999-999', '', '', '', '0', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
-							$createCommonTaskIntoDailyTasksResult = $this->container->db->query($createCommonTaskIntoDailyTasks);
+						$createCommonTaskIntoDailyTasks .= "VALUES (NULL, ";		// id
+						$createCommonTaskIntoDailyTasks .= "'".$getCommonTaskDetailsResult[0]['id']."', ";	// idTask
+						$createCommonTaskIntoDailyTasks .= "'', "; // idTrain
+						$createCommonTaskIntoDailyTasks .= "'999-999', ";		// trainId
+						$createCommonTaskIntoDailyTasks .= "'', ";	// idClient
+						$createCommonTaskIntoDailyTasks .= "'', ";	// idUserInCharge
+						$createCommonTaskIntoDailyTasks .= "'', ";	// idUserChecked
+						$createCommonTaskIntoDailyTasks .= "'', ";	// dateChecked
+						$createCommonTaskIntoDailyTasks .= "'0', ";	// checked
+						$createCommonTaskIntoDailyTasks .= "'" . $deadline ."', ";	// deadline
+						$createCommonTaskIntoDailyTasks .= "'".date('Y-m-d H:i')."', ";	// Date of insertion
+						$createCommonTaskIntoDailyTasks .= "'0')";	// cancelled
+						$createCommonTaskIntoDailyTasksResult = $this->container->db->query($createCommonTaskIntoDailyTasks);
 					}
 				}
+				// END create common tasks (only once per day)
 
 				// Create tasks for each client (only once per day)
 				foreach ($tabClients as $trigrammeClient) {
 					$checkIfClientTasksAreCreated = "SELECT id ";
 					$checkIfClientTasksAreCreated .= "FROM goper_dailytasks ";
-					$checkIfClientTasksAreCreated .= "WHERE idTrain = '999-".$trigrammeClient."' ";
+					$checkIfClientTasksAreCreated .= "WHERE trainId = '999-".$trigrammeClient."' ";
 					$checkIfClientTasksAreCreated .= "AND DATE_FORMAT(dateUpdate, '%Y-%m-%d') = '" . date('Y-m-d') . "'";
 					$checkIfClientTasksAreCreatedResult = $this->container->db->query($checkIfClientTasksAreCreated);
 
@@ -139,18 +151,33 @@ class GoperImportController {
 
 							// Insert task into db
 							$createClientTaskIntoDailyTasks = "INSERT INTO goper_dailytasks ";
-							$createClientTaskIntoDailyTasks .= "VALUES (NULL, '".$getClientTaskDetailsResult[0]['id']."', '999-".$trigrammeClient."', '', '', '', '0', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
+							$createClientTaskIntoDailyTasks .= "VALUES (NULL, ";		// id
+							$createClientTaskIntoDailyTasks .= "'".$getClientTaskDetailsResult[0]['id']."', ";	// idTask
+							$createClientTaskIntoDailyTasks .= "'', "; // idTrain
+							$createClientTaskIntoDailyTasks .= "'999-".$trigrammeClient."', ";		// trainId
+							$createClientTaskIntoDailyTasks .= "(SELECT id FROM goper_clients WHERE abreviation = '".$trigrammeClient."'), ";	// idClient
+							$createClientTaskIntoDailyTasks .= "'', ";	// idUserInCharge
+							$createClientTaskIntoDailyTasks .= "'', ";	// idUserChecked
+							$createClientTaskIntoDailyTasks .= "'', ";	// dateChecked
+							$createClientTaskIntoDailyTasks .= "'0', ";	// checked
+							$createClientTaskIntoDailyTasks .= "'" . $deadline ."', ";	// deadline
+							$createClientTaskIntoDailyTasks .= "'".date('Y-m-d H:i')."', ";	// Date of insertion
+							$createClientTaskIntoDailyTasks .= "'0')";	// cancelled
 							$createClientTaskIntoDailyTasksResult = $this->container->db->query($createClientTaskIntoDailyTasks);
 						}
 					}
 				}
+				// END create tasks for each client (only once per day)
 
 				// Create tasks for trains
 				foreach ($tabTrainIds as $lineTabTrainIds) {
+					$elementsTrainId = explode('-', $lineTabTrainIds[$indexColTrainId]);
+					$trigrammeClient = $elementsTrainId[2];
+
 					if ($lineTabTrainIds[$indexColIsCancelled] != 'DELETE') {
 						$checkIfTrainIdTasksAreCreated = "SELECT id ";
 						$checkIfTrainIdTasksAreCreated .= "FROM goper_dailytasks ";
-						$checkIfTrainIdTasksAreCreated .= "WHERE idTrain = '".$lineTabTrainIds[$indexColTrainId]."' ";
+						$checkIfTrainIdTasksAreCreated .= "WHERE trainId = '".$lineTabTrainIds[$indexColTrainId]."' ";
 						$checkIfTrainIdTasksAreCreated .= "AND DATE_FORMAT(dateUpdate, '%Y-%m-%d') = '" . date('Y-m-d') . "'";
 						$checkIfTrainIdTasksAreCreatedResult = $this->container->db->query($checkIfTrainIdTasksAreCreated);
 
@@ -175,7 +202,18 @@ class GoperImportController {
 
 								// Insert task into db
 								$createTrainTaskIntoDailyTasks = "INSERT INTO goper_dailytasks ";
-								$createTrainTaskIntoDailyTasks .= "VALUES (NULL, '".$getTrainTaskDetailsResult[0]['id']."', '".$lineTabTrainIds[$indexColTrainId]."', '', '', '', '0', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
+								$createTrainTaskIntoDailyTasks .= "VALUES (NULL, ";		// id
+								$createTrainTaskIntoDailyTasks .= "'".$getTrainTaskDetailsResult[0]['id']."', ";	// idTask
+								$createTrainTaskIntoDailyTasks .= "(SELECT id FROM goper_trains WHERE '".$lineTabTrainIds[$indexColTrainId]."' LIKE CONCAT(name, '%')), "; // idTrain
+								$createTrainTaskIntoDailyTasks .= "'".$lineTabTrainIds[$indexColTrainId]."', ";		// trainId
+								$createTrainTaskIntoDailyTasks .= "(SELECT id FROM goper_clients WHERE abreviation = '".$trigrammeClient."'), ";	// idClient
+								$createTrainTaskIntoDailyTasks .= "'', ";	// idUserInCharge
+								$createTrainTaskIntoDailyTasks .= "'', ";	// idUserChecked
+								$createTrainTaskIntoDailyTasks .= "'', ";	// dateChecked
+								$createTrainTaskIntoDailyTasks .= "'0', ";	// checked
+								$createTrainTaskIntoDailyTasks .= "'" . $deadline ."', ";	// deadline
+								$createTrainTaskIntoDailyTasks .= "'".date('Y-m-d H:i')."', ";	// Date of insertion
+								$createTrainTaskIntoDailyTasks .= "'0')";	// cancelled
 								$createTrainTaskIntoDailyTasksResult = $this->container->db->query($createTrainTaskIntoDailyTasks);
 							}
 
@@ -210,7 +248,18 @@ class GoperImportController {
 
 									// Insert task into db
 									$createTrainTaskIntoDailyTasks = "INSERT INTO goper_dailytasks ";
-									$createTrainTaskIntoDailyTasks .= "VALUES (NULL, '".$getTrainTaskDetailsResult[0]['id']."', '".$lineTabTrainIds[$indexColTrainId]."', '', '', '', '0', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
+									$createTrainTaskIntoDailyTasks .= "VALUES (NULL, ";		// id
+									$createTrainTaskIntoDailyTasks .= "'".$getTrainTaskDetailsResult[0]['id']."', ";	// idTask
+									$createTrainTaskIntoDailyTasks .= "(SELECT id FROM goper_trains WHERE '".$lineTabTrainIds[$indexColTrainId]."' LIKE CONCAT(name, '%')), "; // idTrain
+									$createTrainTaskIntoDailyTasks .= "'".$lineTabTrainIds[$indexColTrainId]."', ";		// trainId
+									$createTrainTaskIntoDailyTasks .= "(SELECT id FROM goper_clients WHERE abreviation = '".$trigrammeClient."'), ";	// idClient
+									$createTrainTaskIntoDailyTasks .= "'', ";	// idUserInCharge
+									$createTrainTaskIntoDailyTasks .= "'', ";	// idUserChecked
+									$createTrainTaskIntoDailyTasks .= "'', ";	// dateChecked
+									$createTrainTaskIntoDailyTasks .= "'0', ";	// checked
+									$createTrainTaskIntoDailyTasks .= "'" . $deadline ."', ";	// deadline
+									$createTrainTaskIntoDailyTasks .= "'".date('Y-m-d H:i')."', ";	// Date of insertion
+									$createTrainTaskIntoDailyTasks .= "'0')";	// cancelled
 									$createTrainTaskIntoDailyTasksResult = $this->container->db->query($createTrainTaskIntoDailyTasks);
 								}
 							}
@@ -231,14 +280,14 @@ class GoperImportController {
 
 						$checkIfTrainIdTasksAreCreated = "SELECT id ";
 						$checkIfTrainIdTasksAreCreated .= "FROM goper_dailytasks ";
-						$checkIfTrainIdTasksAreCreated .= "WHERE idTrain = '".$lineTabTrainIds[$indexColTrainId]."' ";
+						$checkIfTrainIdTasksAreCreated .= "WHERE trainId = '".$lineTabTrainIds[$indexColTrainId]."' ";
 						$checkIfTrainIdTasksAreCreated .= "AND DATE_FORMAT(dateUpdate, '%Y-%m-%d') = '".date('Y-m-d')."'";
 						$checkIfTrainIdTasksAreCreatedResult = $this->container->db->query($checkIfTrainIdTasksAreCreated);
 
 						if ($checkIfTrainIdTasksAreCreatedResult) {
 							$cancelTask = "UPDATE goper_dailytasks ";
 							$cancelTask .= "SET cancelled = 1 ";
-							$cancelTask .= "WHERE idTrain = '".$lineTabTrainIds[$indexColTrainId]."' ";
+							$cancelTask .= "WHERE trainId = '".$lineTabTrainIds[$indexColTrainId]."' ";
 							$cancelTask .= "AND DATE_FORMAT(dateUpdate, '%Y-%m-%d') = '".date('Y-m-d')."'";
 							$cancelTask .= "AND idTask NOT IN ".$tabCancellationTasksIds;
 							$cancelTaskResult = $this->container->db->query($cancelTask);
@@ -246,7 +295,7 @@ class GoperImportController {
 
 						$checkIfCancellationTasksAreCreated = "SELECT id ";
 						$checkIfCancellationTasksAreCreated .= "FROM goper_dailytasks ";
-						$checkIfCancellationTasksAreCreated .= "WHERE idTrain = '".$lineTabTrainIds[$indexColTrainId]."' ";
+						$checkIfCancellationTasksAreCreated .= "WHERE trainId = '".$lineTabTrainIds[$indexColTrainId]."' ";
 						$checkIfCancellationTasksAreCreated .= "AND DATE_FORMAT(dateUpdate, '%Y-%m-%d') = '" . date('Y-m-d') . "' ";
 						$checkIfCancellationTasksAreCreated .= "AND idTask IN ".$tabCancellationTasksIds;
 						$checkIfCancellationTasksAreCreatedResult = $this->container->db->query($checkIfCancellationTasksAreCreated);
@@ -263,12 +312,24 @@ class GoperImportController {
 
 								// Insert task into db
 								$createCancellationTaskIntoDailyTasks = "INSERT INTO goper_dailytasks ";
-								$createCancellationTaskIntoDailyTasks .= "VALUES (NULL, '".$getCancellationTaskDetailsResult[0]['id']."', '".$lineTabTrainIds[$indexColTrainId]."', '', '', '', '0', '" . $deadline ."', '".date('Y-m-d H:i')."', '0')";
+								$createCancellationTaskIntoDailyTasks .= "VALUES (NULL, ";		// id
+								$createCancellationTaskIntoDailyTasks .= "'".$getCancellationTaskDetailsResult[0]['id']."', ";	// idTask
+								$createCancellationTaskIntoDailyTasks .= "(SELECT id FROM goper_trains WHERE '".$lineTabTrainIds[$indexColTrainId]."' LIKE CONCAT(name, '%')), "; // idTrain
+								$createCancellationTaskIntoDailyTasks .= "'".$lineTabTrainIds[$indexColTrainId]."', ";		// trainId
+								$createCancellationTaskIntoDailyTasks .= "(SELECT id FROM goper_clients WHERE abreviation = '".$trigrammeClient."'), ";	// idClient
+								$createCancellationTaskIntoDailyTasks .= "'', ";	// idUserInCharge
+								$createCancellationTaskIntoDailyTasks .= "'', ";	// idUserChecked
+								$createCancellationTaskIntoDailyTasks .= "'', ";	// dateChecked
+								$createCancellationTaskIntoDailyTasks .= "'0', ";	// checked
+								$createCancellationTaskIntoDailyTasks .= "'" . $deadline ."', ";	// deadline
+								$createCancellationTaskIntoDailyTasks .= "'".date('Y-m-d H:i')."', ";	// Date of insertion
+								$createCancellationTaskIntoDailyTasks .= "'0')";	// cancelled
 								$createCancellationTaskIntoDailyTasksResult = $this->container->db->query($createCancellationTaskIntoDailyTasks);
 							}
 						}
 					} // END if not "delete" else
 				}
+				// END create tasks for trains
 
 			// END headers were found
 			} else {

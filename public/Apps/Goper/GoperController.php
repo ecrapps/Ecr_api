@@ -16,15 +16,17 @@ class GoperController {
 		$datas = new stdClass();
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
 		$datas->params->password = hash('sha256', $datas->params->password);
-		$checkLogin = "SELECT id ";
+		$checkLogin = "SELECT id, name ";
 		$checkLogin .= "FROM users ";
-		$checkLogin .= "WHERE name = :login ";
+		$checkLogin .= "WHERE username = :login ";
 		$checkLogin .= "AND password = :password ";
 		$checkLoginResult = $this->container->db->query($checkLogin, $datas);
 		$responseLogin = new stdClass();
 		if ($checkLoginResult) {
 			$responseLogin->loginSucceed = true;
-			$responseLogin->idUser = $checkLoginResult[0]['id'];
+			$responseLogin->user = new stdClass();
+			$responseLogin->user->userId = $checkLoginResult[0]['id'];
+			$responseLogin->user->userName = $checkLoginResult[0]['name'];
 		}
 		else
 			$responseLogin->loginSucceed = false;
@@ -349,6 +351,7 @@ class GoperController {
 	//							Daily Tasks								//
 	//////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////
+	
 	public function getDailyTasks(Request $request, Response $response, $args){
 		$getDailyTasks = "SELECT D.id, ";
 		$getDailyTasks .= "D.idTask, ";
