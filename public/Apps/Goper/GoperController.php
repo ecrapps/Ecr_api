@@ -356,7 +356,8 @@ class GoperController {
 		$getDailyTasks = "SELECT D.id, ";
 		$getDailyTasks .= "D.idTask, ";
 		$getDailyTasks .= "TK.name as taskname, ";
-		$getDailyTasks .= "D.idTrain as trainId, ";
+		$getDailyTasks .= "D.trainId as trainId, ";
+		$getDailyTasks .= "D.idClient, ";
 		$getDailyTasks .= "D.idUserChecked, ";
 		$getDailyTasks .= "D.dateChecked, ";
 		$getDailyTasks .= "D.checked, ";
@@ -389,6 +390,20 @@ class GoperController {
 
 			if (sizeof($getTaskCommentsResult) > 0) {
 				$getDailyTasksResult[$i]['comments'] = $getTaskCommentsResult;
+			}
+
+			// Add client information to each element
+			$getTaskClient = "SELECT C.id, ";
+			$getTaskClient .= "C.abreviation, ";
+			$getTaskClient .= "C.name ";
+			$getTaskClient .= "FROM goper_clients as C ";
+			$getTaskClient .= "WHERE C.id = '".$getDailyTasksResult[$i]['idClient']."'";
+			$getTaskClientResult = $this->container->db->query($getTaskClient);
+
+			$getDailyTasksResult[$i]['client'] = [];
+
+			if (sizeof($getTaskClientResult) > 0) {
+				$getDailyTasksResult[$i]['client'] = $getTaskClientResult;
 			}
 		}
 
