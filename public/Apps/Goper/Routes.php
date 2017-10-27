@@ -35,6 +35,7 @@
 
 		//Get Daily Tasks 
 		$app->get('/getDailyTasks', '\GoperController:getDailyTasks');
+		$app->get('/getHistoryDailyTasks', '\GoperController:getHistoryDailyTasks');
 
 		$app->post('/associateClientTask', '\GoperController:associateClientTask');
 		$app->post('/deleteClientTask', '\GoperController:deleteClientTask');
