@@ -25,7 +25,7 @@ class GoperController {
 		if ($checkLoginResult) {
 			$responseLogin->loginSucceed = true;
 			$responseLogin->user = new stdClass();
-			$responseLogin->user->userId = $checkLoginResult[0]['id'];
+			$responseLogin->user->idUser = $checkLoginResult[0]['id'];
 			$responseLogin->user->userName = $checkLoginResult[0]['name'];
 		}
 		else
@@ -120,12 +120,12 @@ class GoperController {
 		// Add comments to the element
 		$getTaskComments = "SELECT C.id, ";
 		$getTaskComments .= "C.idTask, ";
-		$getTaskComments .= "C.author as idAuthor, ";
+		$getTaskComments .= "C.idAuthor, ";
 		$getTaskComments .= "U.name as author, ";
 		$getTaskComments .= "C.content, ";
 		$getTaskComments .= "C.date ";
 		$getTaskComments .= "FROM goper_comments as C ";
-		$getTaskComments .= "LEFT JOIN users as U ON C.author = U.id ";
+		$getTaskComments .= "LEFT JOIN users as U ON C.idAuthor = U.id ";
 		$getTaskComments .= "WHERE C.idTask = '".$getTaskResult[0]['id']."' ";
 		$getTaskComments .= "ORDER BY C.date DESC";
 		$getTaskCommentsResult = $this->container->db->query($getTaskComments);
@@ -376,12 +376,12 @@ class GoperController {
 			// Add comments to each element
 			$getTaskComments = "SELECT C.id, ";
 			$getTaskComments .= "C.idTask, ";
-			$getTaskComments .= "C.author as idAuthor, ";
+			$getTaskComments .= "C.idAuthor, ";
 			$getTaskComments .= "U.name as author, ";
 			$getTaskComments .= "C.content, ";
 			$getTaskComments .= "C.date ";
 			$getTaskComments .= "FROM goper_comments as C ";
-			$getTaskComments .= "LEFT JOIN users as U ON C.author = U.id ";
+			$getTaskComments .= "LEFT JOIN users as U ON C.idAuthor = U.id ";
 			$getTaskComments .= "WHERE C.idTask = '".$getDailyTasksResult[$i]['id']."' ";
 			$getTaskComments .= "ORDER BY C.date DESC";
 			$getTaskCommentsResult = $this->container->db->query($getTaskComments);
@@ -426,8 +426,7 @@ class GoperController {
 		$getDailyTasks .= "FROM goper_dailytasks as D ";
 		$getDailyTasks .= "LEFT JOIN goper_tasks as TK ON D.idTask = TK.id ";
 		$getDailyTasks .= "LEFT JOIN goper_trains as TN ON D.idTrain = TN.id ";
-		/*$getDailyTasks .= "WHERE NOT (D.DEADLINE < NOW() AND checked = 1) ";
-		$getDailyTasks .= "AND D.cancelled <> 1 ";*/
+		$getDailyTasks .= "WHERE D.cancelled <> 1 ";
 		$getDailyTasks .= "ORDER BY D.deadline ASC";
 		$getDailyTasksResult = $this->container->db->query($getDailyTasks);
 
@@ -435,12 +434,12 @@ class GoperController {
 			// Add comments to each element
 			$getTaskComments = "SELECT C.id, ";
 			$getTaskComments .= "C.idTask, ";
-			$getTaskComments .= "C.author as idAuthor, ";
+			$getTaskComments .= "C.idAuthor, ";
 			$getTaskComments .= "U.name as author, ";
 			$getTaskComments .= "C.content, ";
 			$getTaskComments .= "C.date ";
 			$getTaskComments .= "FROM goper_comments as C ";
-			$getTaskComments .= "LEFT JOIN users as U ON C.author = U.id ";
+			$getTaskComments .= "LEFT JOIN users as U ON C.idAuthor = U.id ";
 			$getTaskComments .= "WHERE C.idTask = '".$getDailyTasksResult[$i]['id']."' ";
 			$getTaskComments .= "ORDER BY C.date DESC";
 			$getTaskCommentsResult = $this->container->db->query($getTaskComments);
@@ -487,7 +486,7 @@ class GoperController {
 		$datas = new stdClass();
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
 		$saveNewComment = "INSERT INTO goper_comments ";
-		$saveNewComment .= "VALUES (NULL, :idTask, :author, :content, NOW())";
+		$saveNewComment .= "VALUES (NULL, :idTask, :idAuthor, :content, NOW())";
 		$saveNewCommentResult = $this->container->db->query($saveNewComment, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($saveNewCommentResult,JSON_NUMERIC_CHECK));
