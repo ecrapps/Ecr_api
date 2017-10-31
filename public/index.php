@@ -12,7 +12,8 @@
 	$app = new \Slim\App(["settings" => $config]);
 
 	//Instanciate middlewares
-	require __DIR__ . '/Apps/Garile/middleware.php';
+	require __DIR__ . '/Middlewares/IsSessionAliveMiddleware.php';
+	require __DIR__ . '/Middlewares/sessionMiddleware.php';
 
 	//Setting conten type header
 	$app->add(function ($req, $res, $next) {
@@ -41,8 +42,10 @@
 	require __DIR__ . '/Apps/Admin/Routes.php';
 
 	//Goper app
-	require __DIR__ . '/Apps/Goper/GoperController.php';
-	require __DIR__ . '/Apps/Goper/GoperImportController.php';
+	require __DIR__ . '/Apps/Goper/controllers/GoperDailyTasksController.php';
+	require __DIR__ . '/Apps/Goper/controllers/GoperTasksController.php';
+	require __DIR__ . '/Apps/Goper/controllers/GoperTrainIdController.php';
+	require __DIR__ . '/Apps/Goper/controllers/GoperImportController.php';
 	require __DIR__ . '/Apps/Goper/Routes.php';
 
 	$app->run();
