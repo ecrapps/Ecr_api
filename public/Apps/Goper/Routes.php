@@ -26,33 +26,33 @@
 		$app->post('/updateTask', '\GoperTasksController:updateTask');
 		//Delete Task 
 		$app->post('/deleteTask', '\GoperTasksController:deleteTask');
-		// Update checked/unchecked Task 
-		$app->post('/updateTaskCheck', '\GoperDailyTasksController:updateTaskCheck');
 		// Get Task type
 		$app->get('/getTaskTypes', '\GoperTasksController:getTaskTypes');
 
-		$app->post('/saveNewComment', '\GoperDailyTasksController:saveNewComment');
+		$app->post('/associateClientTask', '\GoperTasksController:associateClientTask');
+		$app->post('/deleteClientTask', '\GoperTasksController:deleteClientTask');
+		$app->get('/getClientsInTask', '\GoperTasksController:getClientsInTask');
+
+		$app->post('/associateTrainTask', '\GoperTasksController:associateTrainTask');
+		$app->post('/deleteTrainTask', '\GoperTasksController:deleteTrainTask');
+		$app->get('/getTrainsInTask', '\GoperTasksController:getTrainsInTask');
+
+		$app->post('/associateCommonTask', '\GoperTasksController:associateCommonTask');
+		$app->post('/deleteCommonTask', '\GoperTasksController:deleteCommonTask');
+
+		$app->post('/associateCancellationTask', '\GoperTasksController:associateCancellationTask');
+		$app->post('/deleteCancellationTask', '\GoperTasksController:deleteCancellationTask');
+
+		$app->post('/associateMdTask', '\GoperTasksController:associateMdTask');
+		$app->post('/deleteMdTask', '\GoperTasksController:deleteMdTask');
 
 		//Get Daily Tasks 
 		$app->get('/getDailyTasks', '\GoperDailyTasksController:getDailyTasks');
 		$app->get('/getHistoryDailyTasks', '\GoperDailyTasksController:getHistoryDailyTasks');
+		// Update checked/unchecked Task 
+		$app->post('/updateTaskCheck', '\GoperDailyTasksController:updateTaskCheck');
 
-		$app->post('/associateClientTask', '\GoperDailyTasksController:associateClientTask');
-		$app->post('/deleteClientTask', '\GoperDailyTasksController:deleteClientTask');
-		$app->get('/getClientsInTask', '\GoperDailyTasksController:getClientsInTask');
-
-		$app->post('/associateTrainTask', '\GoperDailyTasksController:associateTrainTask');
-		$app->post('/deleteTrainTask', '\GoperDailyTasksController:deleteTrainTask');
-		$app->get('/getTrainsInTask', '\GoperDailyTasksController:getTrainsInTask');
-
-		$app->post('/associateCommonTask', '\GoperDailyTasksController:associateCommonTask');
-		$app->post('/deleteCommonTask', '\GoperDailyTasksController:deleteCommonTask');
-
-		$app->post('/associateCancellationTask', '\GoperDailyTasksController:associateCancellationTask');
-		$app->post('/deleteCancellationTask', '\GoperDailyTasksController:deleteCancellationTask');
-
-		$app->post('/associateMdTask', '\GoperDailyTasksController:associateMdTask');
-		$app->post('/deleteMdTask', '\GoperDailyTasksController:deleteMdTask');
+		$app->post('/saveNewComment', '\GoperDailyTasksController:saveNewComment');
 
 		// Import
 		$app->post('/import', '\GoperImportController:import');
