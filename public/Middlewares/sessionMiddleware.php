@@ -1,9 +1,9 @@
 <?php
 
-	$app->add(new \Slim\Middleware\Session([
+	/*$app->add(new \Slim\Middleware\Session([
 	  'lifetime' => '2 minutes',
 	  'autorefresh' => false
-	]));
+	]));*/
 
 	$container = $app->getContainer();
 

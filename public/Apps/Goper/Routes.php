@@ -27,11 +27,11 @@
 		//Delete Task 
 		$app->post('/deleteTask', '\GoperTasksController:deleteTask');
 		// Update checked/unchecked Task 
-		$app->post('/updateTaskCheck', '\GoperTasksController:updateTaskCheck');
+		$app->post('/updateTaskCheck', '\GoperDailyTasksController:updateTaskCheck');
 		// Get Task type
 		$app->get('/getTaskTypes', '\GoperTasksController:getTaskTypes');
 
-		$app->post('/saveNewComment', '\GoperTasksController:saveNewComment');
+		$app->post('/saveNewComment', '\GoperDailyTasksController:saveNewComment');
 
 		//Get Daily Tasks 
 		$app->get('/getDailyTasks', '\GoperDailyTasksController:getDailyTasks');
