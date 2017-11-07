@@ -12,6 +12,10 @@ class GoperDailyTasksController {
 	}
 	
 	public function getDailyTasks(Request $request, Response $response, $args){
+		$getQueryParams = $request->getQueryParams();
+		$datas = new stdClass();
+		$datas->params = json_decode(json_encode($getQueryParams), FALSE);
+
 		$getDailyTasks = "SELECT D.id, ";
 		$getDailyTasks .= "D.idTask, ";
 		$getDailyTasks .= "TK.name as taskname, ";
@@ -27,9 +31,15 @@ class GoperDailyTasksController {
 		$getDailyTasks .= "LEFT JOIN goper_tasks as TK ON D.idTask = TK.id ";
 		$getDailyTasks .= "LEFT JOIN goper_trains as TN ON D.idTrain = TN.id ";
 		$getDailyTasks .= "WHERE NOT (D.DEADLINE < NOW() AND checked = 1) ";
-		$getDailyTasks .= "AND D.cancelled <> 1 ";
+		$getDailyTasks .= "  AND D.cancelled <> 1 ";
+		$getDailyTasks .= "  AND D.idClient IN (SELECT gcs.idClient ";
+		$getDailyTasks .= "        FROM goper_clients_structures AS gcs ";
+		$getDailyTasks .= "        LEFT JOIN users_structures AS us ";
+		$getDailyTasks .= "        ON us.idStructure = gcs.idStructure ";
+		$getDailyTasks .= "        WHERE us.idUser = :idUser) ";
+		$getDailyTasks .= "  OR D.idClient = 0 ";
 		$getDailyTasks .= "ORDER BY D.deadline ASC";
-		$getDailyTasksResult = $this->container->db->query($getDailyTasks);
+		$getDailyTasksResult = $this->container->db->query($getDailyTasks, $datas);
 
 		for ($i=0 ; $i<sizeof($getDailyTasksResult) ; $i++) {
 			// Add comments to each element
@@ -71,6 +81,10 @@ class GoperDailyTasksController {
 	}
 
 	public function getHistoryDailyTasks(Request $request, Response $response, $args){
+		$getQueryParams = $request->getQueryParams();
+		$datas = new stdClass();
+		$datas->params = json_decode(json_encode($getQueryParams), FALSE);
+
 		$getDailyTasks = "SELECT D.id, ";
 		$getDailyTasks .= "D.idTask, ";
 		$getDailyTasks .= "TK.name as taskname, ";
@@ -86,8 +100,14 @@ class GoperDailyTasksController {
 		$getDailyTasks .= "LEFT JOIN goper_tasks as TK ON D.idTask = TK.id ";
 		$getDailyTasks .= "LEFT JOIN goper_trains as TN ON D.idTrain = TN.id ";
 		$getDailyTasks .= "WHERE D.cancelled <> 1 ";
+		$getDailyTasks .= "  AND D.idClient IN (SELECT gcs.idClient ";
+		$getDailyTasks .= "        FROM goper_clients_structures AS gcs ";
+		$getDailyTasks .= "        LEFT JOIN users_structures AS us ";
+		$getDailyTasks .= "        ON us.idStructure = gcs.idStructure ";
+		$getDailyTasks .= "        WHERE us.idUser = :idUser) ";
+		$getDailyTasks .= "  OR D.idClient = 0 ";
 		$getDailyTasks .= "ORDER BY D.deadline ASC";
-		$getDailyTasksResult = $this->container->db->query($getDailyTasks);
+		$getDailyTasksResult = $this->container->db->query($getDailyTasks, $datas);
 
 		for ($i=0 ; $i<sizeof($getDailyTasksResult) ; $i++) {
 			// Add comments to each element
