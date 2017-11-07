@@ -179,10 +179,12 @@ class GoperTasksController {
 		$getQueryParams = $request->getQueryParams();
 		$datas = new stdClass();
 		$datas->params = json_decode(json_encode($getQueryParams), FALSE);
-		$getTrainsTasks = "SELECT ug.idTrain as id, g.name, g.status ";
+		/*$getTrainsTasks = "SELECT ug.idTrain as id, g.name, g.status ";
 		$getTrainsTasks .= "FROM goper_tasks_trains as ug ";
 		$getTrainsTasks .= "INNER JOIN goper_trains as g ON g.id=ug.idTrain ";
-		$getTrainsTasks .= "WHERE ug.idTask = :idTask ";
+		$getTrainsTasks .= "WHERE ug.idTask = :idTask ";*/
+		$getTrainsTasks = "SELECT * ";
+		$getTrainsTasks .= "FROM goper_trains ";
 		$getTrainsTasksResult = $this->container->db->query($getTrainsTasks, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($getTrainsTasksResult,JSON_NUMERIC_CHECK));
