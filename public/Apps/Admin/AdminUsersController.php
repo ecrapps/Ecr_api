@@ -49,8 +49,9 @@ class AdminUsersController {
 		$getParsedBody = $request->getParsedBody();
 		$datas = new stdClass();
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
-		$createUser = "INSERT INTO users (name, username, email, status) ";
-		$createUser .= "VALUES (:name, :username, :email, :status) ";
+		$datas->params->password = hash('sha256', $datas->params->password);
+		$createUser = "INSERT INTO users (name, username, email, password) ";
+		$createUser .= "VALUES (:name, :username, :email, :password) ";
 		$createUserResult = $this->container->db->query($createUser, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($createUserResult,JSON_NUMERIC_CHECK));
@@ -64,7 +65,6 @@ class AdminUsersController {
 		$updateUser .= "SET name = :name, ";
 		$updateUser .= "username = :username, ";
 		$updateUser .= "email = :email, ";
-		$updateUser .= "status = :status ";
 		$updateUser .= "WHERE id = :id ";
 		$updateUserResult = $this->container->db->query($updateUser, $datas);
 		return $response->withStatus(200)
