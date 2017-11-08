@@ -33,9 +33,12 @@
 		$app->post('/deleteClientTask', '\GoperTasksController:deleteClientTask');
 		$app->get('/getClientsInTask', '\GoperTasksController:getClientsInTask');
 
+		/*$app->post('/associateTrainTask', '\GoperTasksController:associateTrainTask');
+		$app->post('/deleteTrainTask', '\GoperTasksController:deleteTrainTask');
+		$app->get('/getTrainsInTask', '\GoperTasksController:getTrainsInTask');*/
+
 		$app->post('/associateTrainTask', '\GoperTasksController:associateTrainTask');
 		$app->post('/deleteTrainTask', '\GoperTasksController:deleteTrainTask');
-		$app->get('/getTrainsInTask', '\GoperTasksController:getTrainsInTask');
 
 		$app->post('/associateCommonTask', '\GoperTasksController:associateCommonTask');
 		$app->post('/deleteCommonTask', '\GoperTasksController:deleteCommonTask');

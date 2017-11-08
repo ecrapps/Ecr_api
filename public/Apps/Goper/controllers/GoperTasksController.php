@@ -153,7 +153,7 @@ class GoperTasksController {
         				->write(json_encode($getTaskTypesResult,JSON_NUMERIC_CHECK));
 	}
 
-	public function associateTrainTask(Request $request, Response $response, $args){
+	/*public function associateTrainTask(Request $request, Response $response, $args){
 		$getParsedBody = $request->getParsedBody();
 		$datas = new stdClass();
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
@@ -179,16 +179,16 @@ class GoperTasksController {
 		$getQueryParams = $request->getQueryParams();
 		$datas = new stdClass();
 		$datas->params = json_decode(json_encode($getQueryParams), FALSE);
-		/*$getTrainsTasks = "SELECT ug.idTrain as id, g.name, g.status ";
-		$getTrainsTasks .= "FROM goper_tasks_trains as ug ";
-		$getTrainsTasks .= "INNER JOIN goper_trains as g ON g.id=ug.idTrain ";
-		$getTrainsTasks .= "WHERE ug.idTask = :idTask ";*/
+		//$getTrainsTasks = "SELECT ug.idTrain as id, g.name, g.status ";
+		//$getTrainsTasks .= "FROM goper_tasks_trains as ug ";
+		//$getTrainsTasks .= "INNER JOIN goper_trains as g ON g.id=ug.idTrain ";
+		//$getTrainsTasks .= "WHERE ug.idTask = :idTask ";
 		$getTrainsTasks = "SELECT * ";
 		$getTrainsTasks .= "FROM goper_trains ";
 		$getTrainsTasksResult = $this->container->db->query($getTrainsTasks, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($getTrainsTasksResult,JSON_NUMERIC_CHECK));
-	}
+	}*/
 
 	public function associateClientTask(Request $request, Response $response, $args){
 		$getParsedBody = $request->getParsedBody();
@@ -303,5 +303,32 @@ class GoperTasksController {
 		$deleteMdTaskResult = $this->container->db->query($deleteMdTask, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($deleteMdTaskResult,JSON_NUMERIC_CHECK));
+	}
+
+	public function associateTrainTask(Request $request, Response $response, $args){
+		$getParsedBody = $request->getParsedBody();
+		$datas = new stdClass();
+		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
+		$selectAssociate = "SELECT idTask FROM goper_tasks_trains WHERE idTask=:idTask";
+		$selectAssociateResult = $this->container->db->query($selectAssociate, $datas);
+		$associateTrainTask = "INSERT INTO goper_tasks_trains (idTask) ";
+		$associateTrainTask .= "VALUES (:idTask) ";
+		if (!$selectAssociateResult)
+			$associateTrainTaskResult = $this->container->db->query($associateTrainTask, $datas);
+		else
+			$associateTrainTaskResult = true;
+		return $response->withStatus(200)
+        				->write(json_encode($associateTrainTaskResult,JSON_NUMERIC_CHECK));
+	}
+
+	public function deleteTrainTask(Request $request, Response $response, $args){
+		$getParsedBody = $request->getParsedBody();
+		$datas = new stdClass();
+		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
+		$deleteTrainTask = "DELETE FROM goper_tasks_trains ";
+		$deleteTrainTask .= "WHERE idTask = :idTask";
+		$deleteTrainTaskResult = $this->container->db->query($deleteTrainTask, $datas);
+		return $response->withStatus(200)
+        				->write(json_encode($deleteTrainTaskResult,JSON_NUMERIC_CHECK));
 	}
 }
