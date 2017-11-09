@@ -16,15 +16,26 @@ class AdminUsersController {
 		$datas = new stdClass();
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
 		$datas->params->password = hash('sha256', $datas->params->password);
-		$checkLogin = "SELECT id ";
+		$checkLogin = "SELECT id, name ";
 		$checkLogin .= "FROM users ";
-		$checkLogin .= "WHERE name = :login ";
+		$checkLogin .= "WHERE username = :login ";
 		$checkLogin .= "AND password = :password ";
 		$checkLoginResult = $this->container->db->query($checkLogin, $datas);
 		$responseLogin = new stdClass();
 		if ($checkLoginResult) {
 			$responseLogin->loginSucceed = true;
-			$responseLogin->idUser = $checkLoginResult[0]['id'];
+			$responseLogin->user = new stdClass();
+			$responseLogin->user->idUser = $checkLoginResult[0]['id'];
+			$responseLogin->user->userName = $checkLoginResult[0]['name'];
+
+			/* TODO :
+			 * Enregistrer les données de l'user courant dans $_SESSION
+			 * pour ne plus avoir à les passer dans la requête http
+			 * Pour cela utiliser le le middleware : sessionMiddleware
+			 *
+			*/
+			// $session = $this->container->session;
+			// $session->set('EcrSession', $responseLogin);
 		}
 		else
 			$responseLogin->loginSucceed = false;
