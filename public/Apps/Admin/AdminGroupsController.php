@@ -50,6 +50,9 @@ class AdminGroupsController {
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
 		$deleteGroup = "DELETE FROM groups WHERE id = :idGroup ";
 		$deleteGroupResult = $this->container->db->query($deleteGroup, $datas);
+		// Delete all group-features associations from groups_features
+		$deleteGroupFeatures = "DELETE FROM groups_features WHERE idGroup = :idGroup ";
+		$deleteGroupFeaturesResult = $this->container->db->query($deleteGroupFeatures, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($deleteGroupResult,JSON_NUMERIC_CHECK));
 	}
