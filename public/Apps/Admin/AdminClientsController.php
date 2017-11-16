@@ -54,6 +54,9 @@ class AdminClientsController {
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
 		$deleteClient = "DELETE FROM goper_clients WHERE id = :idClient ";
 		$deleteClientResult = $this->container->db->query($deleteClient, $datas);
+		// Delete all client-users associations from users_clients
+		$deleteClientUsers = "DELETE FROM users_clients WHERE idClient = :idClient ";
+		$deleteClientUsersResult = $this->container->db->query($deleteClientUsers, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($deleteClientResult,JSON_NUMERIC_CHECK));
 	}

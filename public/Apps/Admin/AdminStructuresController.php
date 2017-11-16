@@ -54,6 +54,9 @@ class AdminStructuresController {
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
 		$deleteStructure = "DELETE FROM structures WHERE id = :idStructure ";
 		$deleteStructureResult = $this->container->db->query($deleteStructure, $datas);
+		// Delete all structure-user associations from users_structures
+		$deleteStructureUsers = "DELETE FROM users_structures WHERE idStructure = :idStructure ";
+		$deleteStructureUsersResult = $this->container->db->query($deleteStructureUsers, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($deleteStructureResult,JSON_NUMERIC_CHECK));
 	}

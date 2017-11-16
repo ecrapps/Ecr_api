@@ -153,7 +153,8 @@ class GoperDailyTasksController {
 		$datas = new stdClass();
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
 		$updateTaskCheck = "UPDATE goper_dailytasks ";
-		$updateTaskCheck .= "SET checked = :taskIsChecked ";
+		$updateTaskCheck .= "SET checked = :taskIsChecked, ";
+		$updateTaskCheck .= "idUserChecked = :idUser ";
 		$updateTaskCheck .= "WHERE id = :taskId";
 		$updateTaskCheckResult = $this->container->db->query($updateTaskCheck, $datas);
 		return $response->withStatus(200)
