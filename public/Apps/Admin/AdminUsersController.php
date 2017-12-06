@@ -75,7 +75,11 @@ class AdminUsersController {
 		$updateUser = "UPDATE users ";
 		$updateUser .= "SET name = :name, ";
 		$updateUser .= "username = :username, ";
-		$updateUser .= "email = :email, ";
+		$updateUser .= "email = :email ";
+		if (property_exists($datas->params, 'password')) {
+			$datas->params->password = hash('sha256', $datas->params->password);
+			$updateUser .= ", password = :password ";
+		}
 		$updateUser .= "WHERE id = :id ";
 		$updateUserResult = $this->container->db->query($updateUser, $datas);
 		return $response->withStatus(200)
@@ -88,6 +92,12 @@ class AdminUsersController {
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
 		$deleteUser = "DELETE FROM users WHERE id = :idUser ";
 		$deleteUserResult = $this->container->db->query($deleteUser, $datas);
+		// Delete all structure-user associations from users_structures
+		$deleteUserStructures = "DELETE FROM users_structures WHERE idUser = :idUser ";
+		$deleteUserStructuresResult = $this->container->db->query($deleteUserStructures, $datas);
+		// Delete all group-user associations from users_groups
+		$deleteUserGroups = "DELETE FROM users_groups WHERE idUser = :idUser ";
+		$deleteUserGroupsResult = $this->container->db->query($deleteUserGroups, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($deleteUserResult,JSON_NUMERIC_CHECK));
 	}

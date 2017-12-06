@@ -51,7 +51,7 @@ class AdminAppsController {
 		$deleteApp = "DELETE FROM apps WHERE id = :idApp ";
 		$deleteAppResult = $this->container->db->query($deleteApp, $datas);
 		// Delete all app-users associations from users_apps
-		$deleteAppUsers = "DELETE FROM users_apps WHERE idApp = :idApp ";
+		$deleteAppUsers = "DELETE FROM groups_apps WHERE idApp = :idApp ";
 		$deleteAppUsersResult = $this->container->db->query($deleteAppUsers, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($deleteAppResult,JSON_NUMERIC_CHECK));

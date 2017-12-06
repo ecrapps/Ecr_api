@@ -82,6 +82,9 @@ class AdminFeaturesController {
 		$datas->params = json_decode(json_encode($getParsedBody), FALSE);
 		$deleteFeature = "DELETE FROM features WHERE id = :idFeature ";
 		$deleteFeatureResult = $this->container->db->query($deleteFeature, $datas);
+		// Delete all features-groups associations from groups_features
+		$deleteFeatureGroup = "DELETE FROM groups_features WHERE idFeature = :idFeature ";
+		$deleteFeatureGroupResult = $this->container->db->query($deleteFeatureGroup, $datas);
 		return $response->withStatus(200)
         				->write(json_encode($deleteFeatureResult,JSON_NUMERIC_CHECK));
 	}

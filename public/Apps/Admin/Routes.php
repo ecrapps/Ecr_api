@@ -16,12 +16,18 @@
 		$app->post('/updateGroup', '\AdminGroupsController:updateGroup');
 		//Delete Group 
 		$app->post('/deleteGroup', '\AdminGroupsController:deleteGroup');
-		//Get Groups in User
-		$app->get('/getGroupsInUser', '\AdminGroupsController:getGroupsInUser');
 		//Associate Group and User
 		$app->post('/associateGroupUser', '\AdminGroupsController:associateGroupUser');
 		//Delete Group User
 		$app->post('/deleteGroupUser', '\AdminGroupsController:deleteGroupUser');
+		//Get Groups in User
+		$app->get('/getGroupsInUser', '\AdminGroupsController:getGroupsInUser');
+		//Associate Group and User
+		$app->post('/associateGroupApp', '\AdminGroupsController:associateGroupApp');
+		//Delete Group User
+		$app->post('/deleteGroupApp', '\AdminGroupsController:deleteGroupApp');
+		//Get Groups in App
+		$app->get('/getGroupsInApp', '\AdminGroupsController:getGroupsInApp');
 
 		//Get Features 
 		$app->get('/getFeatures', '\AdminFeaturesController:getFeatures');
@@ -88,8 +94,18 @@
 		$app->post('/updateStructure', '\AdminStructuresController:updateStructure');
 		//Delete Structure 
 		$app->post('/deleteStructure', '\AdminStructuresController:deleteStructure');
+		//Associate Structure and Client
+		$app->post('/associateStructureClient', '\AdminStructuresController:associateStructureClient');
+		//Get Structures in Client
+		$app->get('/getStructuresInClient', '\AdminStructuresController:getStructuresInClient');
+		//Associate Structure and User
+		$app->post('/associateStructureUser', '\AdminStructuresController:associateStructureUser');
 		//Get Structures in User
 		$app->get('/getStructuresInUser', '\AdminStructuresController:getStructuresInUser');
+		//Delete Structure Client
+		$app->post('/deleteStructureClient', '\AdminStructuresController:deleteStructureClient');
+		//Delete Structure User
+		$app->post('/deleteStructureUser', '\AdminStructuresController:deleteStructureUser');
 
 		//Get Clients 
 		$app->get('/getClients', '\AdminClientsController:getClients');
@@ -99,8 +115,12 @@
 		$app->post('/updateClient', '\AdminClientsController:updateClient');
 		//Delete Client 
 		$app->post('/deleteClient', '\AdminClientsController:deleteClient');
-		//Get Clients in User
-		$app->get('/getClientsInUser', '\AdminClientsController:getClientsInUser');
+		//Get Clients in Structure
+		$app->get('/getClientsInStructure', '\AdminClientsController:getClientsInStructure');
+		//Associate Structure and User
+		$app->post('/associateClientStructure', '\AdminClientsController:associateClientStructure');
+		//Delete Structure User
+		$app->post('/deleteClientStructure', '\AdminClientsController:deleteClientStructure');
 
 
 	});//->add(new IsSessionAliveMiddleware());
